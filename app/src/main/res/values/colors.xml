@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="yellow_HC">#ffdb0d</color> <!-- må finne korrekt HEX for HC-gul-->
+
+    <!-- for å hindre et rendering problem legger jeg tl disse filene-->
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
+</resources>

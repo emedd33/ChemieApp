@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="no.chemie.profile.admin"
+    android:icon="@mipmap/profile_picture_defalt"
+    android:smallIcon="@mipmap/profile_picture_defalt"
+    android:label="my admin account"/>
