@@ -24,6 +24,7 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        //heisann, dette går bra
 
 
     }
