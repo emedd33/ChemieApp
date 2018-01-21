@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import java.util.concurrent.ExecutionException;
 
 
@@ -73,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             if (email.equals("admin") && password.equals("admin")) {
                 result = "success";
             } else {
-                result = backgroundWorker.execute("login", email, password).get();
+                result = backgroundWorker.execute("LOGIN", email, password).get();
             }
             if (result.equals("success")) {
                 //

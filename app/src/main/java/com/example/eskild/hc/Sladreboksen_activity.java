@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import static java.lang.String.*;
+
 public class Sladreboksen_activity extends AppCompatActivity implements View.OnClickListener {
     public Toolbar toolbar;
     public static final int GET_FROM_GALLERY = 3;
@@ -27,6 +29,7 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
     public String file_string;
     public String sladder_text;
     public Bitmap bitmap;
+    public Uri sladder_image;
     public ProgressBar progress_send;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,6 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
         //onClick lar bruker velge filer fra gallery til upload
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -51,20 +53,28 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
 
                 EditText editText = (EditText)findViewById(R.id.Sladder_text);
                 sladder_text = editText.getText().toString();
-
                 BackgroundWorker backgroundWorker = new BackgroundWorker(this,progress_send);
-                try {
-                    String result = backgroundWorker.execute("send_sladder", sladder_text).get();
-                    Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
-                    editText.setText("");
+                if (sladder_text != "") {
+                    try {
+                        String result = backgroundWorker.execute("SEND_SLADDER", sladder_text).get();
+                        if (result.equals("201")){
+                            Toast.makeText(this, "Sladder sendt", Toast.LENGTH_SHORT).show();
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+                        } else {
+                            Toast.makeText(this, "Error Response code:" + result, Toast.LENGTH_SHORT).show();
+                        }
+                        editText.setText("");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 }
         }
     }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
@@ -110,7 +120,7 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
         if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             file_string = selectedImage.getLastPathSegment();
-
+            sladder_image = selectedImage;
             filename.setText(file_string);
             selectedImage.getEncodedAuthority();
             Bitmap bitmap = null;

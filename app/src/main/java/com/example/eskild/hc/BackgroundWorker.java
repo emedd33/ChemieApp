@@ -6,6 +6,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -14,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -30,14 +34,32 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         String type = params[0];
 
-        if (type == "login"){
-            String login_url = "http://10.0.2.2/login.php";
+        if (type == "LOGIN"){
+            String login_url = "http://192.168.20.5:8000/sladreboks/get_auth_token/";
             String user_name = params[1];
             String password = params[2];
             try {
                 URL url = new URL(login_url);
+                JSONObject jsonObject = new JSONObject();
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Content-Type", "application/json");
+
+
+                con.setDoOutput(true);
+
+                OutputStream outputStream = con.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+
+
+
+
+                /*
+                URL url = new URL(login_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
+                httpURLConnection.setRequestProperty("User-Agent", "my-rest-app-v0.1");
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.setDoOutput(true);
@@ -60,8 +82,8 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
                 }
                 bufferedReader.close();
                 inputStream.close();
-                httpURLConnection.disconnect();
-                return result;
+                httpURLConnection.disconnect();*/
+                return null;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -69,46 +91,42 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
                 e.printStackTrace();
             }
 
-        } if (type == "send_sladder"){
-            String sladder_text = params[1];
-            String url_string = "http://10.0.2.2/sendSladder.php";
+        } if (type == "SEND_SLADDER"){
+            String url_string = "http://192.168.20.5:8000/sladreboks/rest/";
+            String text = params[1];
+            String Token = "Token 72cc07d3b7698f1c598f2e6c4c07614ea2e1d183";
             try {
                 URL url = new URL(url_string);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("content", text);
 
+                String JSON = jsonObject.toString();
 
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.setDoOutput(true);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Authorization", Token);
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Content-Type", "application/json");
 
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                con.setDoOutput(true);
 
-                // CSRF token
-                String post_data = URLEncoder.encode("sladder_tekst", "UTF-8")+"="+URLEncoder.encode(sladder_text,"UTF-8");
-                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-
+                OutputStream outputStream = con.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                writer.write(JSON);
+                writer.close();
                 outputStream.close();
 
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
-                String line = "";
-                String result = "";
-                while((line=bufferedReader.readLine())!= null){
-                    result += line;
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-                return result;
+                int responseCode = con.getResponseCode();
+                System.out.println(JSON);
+                System.out.println("Response Code : " + responseCode);
+                return String.valueOf(responseCode);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
         }
         return null;
     }
