@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +50,7 @@ public class kaffeknappen_activity extends AppCompatActivity {
 
             //When yes is pressed a notification is created
             //Notification for all coffelovers out there!
+            @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();

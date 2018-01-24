@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-
-import static java.lang.String.*;
 
 public class Sladreboksen_activity extends AppCompatActivity implements View.OnClickListener {
     public Toolbar toolbar;
@@ -29,57 +29,84 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
     public String file_string;
     public String sladder_text;
     public Bitmap bitmap;
-    public Uri sladder_image;
     public ProgressBar progress_send;
+    public EditText sladder_edittext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sladreboksen_activity);
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_sladreboksen);
+        this.sladder_edittext = (EditText)findViewById(R.id.Sladder_text);
+        this.bitmap = null;
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
+        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+
+        getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        progress_send = (ProgressBar)findViewById(R.id.Progress_send);
-        progress_send.setVisibility(View.INVISIBLE);
-        filename = (TextView)findViewById(R.id.filename);
+
         //setter onclick upload på id\sladre_button
-        //onClick lar bruker velge filer fra gallery til upload
+        //onClick lar bruker velge filer fra gallery til upload*/
     }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.send_button:
-
-                EditText editText = (EditText)findViewById(R.id.Sladder_text);
-                sladder_text = editText.getText().toString();
-                BackgroundWorker backgroundWorker = new BackgroundWorker(this,progress_send);
-                if (sladder_text != "") {
-                    try {
-                        String result = backgroundWorker.execute("SEND_SLADDER", sladder_text).get();
-                        if (result.equals("201")){
-                            Toast.makeText(this, "Sladder sendt", Toast.LENGTH_SHORT).show();
-
-                        } else {
-                            Toast.makeText(this, "Error Response code:" + result, Toast.LENGTH_SHORT).show();
-                        }
-                        editText.setText("");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-        }
-    }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(Sladreboksen_activity.this, HovedActivity.class);
+        startActivity(intent);
+    }
+    @Override
+    public void onClick(View v) {
+        MyTaskParams myTaskParams = new MyTaskParams();
+        switch (v.getId()){
+            case R.id.send_button:
+                myTaskParams.request = "SEND_SLADDER";
+                sladder_text = this.sladder_edittext.getText().toString();
+                myTaskParams.content = sladder_text;
+                BackgroundWorker_sladder Worker = new BackgroundWorker_sladder(this,progress_send);
+                if (sladder_text.equals("")){
+                    if (this.bitmap == null){
+                        break;
+                    }
+                } else {
+                    try {
+                        String String_image = myTaskParams.convertBitmap(this.bitmap);
+                        myTaskParams.String_image = String_image;
+                        String result = Worker.execute(myTaskParams).get();
+                        if (result.equals("201")){
+                            Toast.makeText(this, "Sladder sendt", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Error Response code:" + result, Toast.LENGTH_SHORT).show();
+                        }
+                        this.sladder_edittext.setText("");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case R.id.image_buton:
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                //henter ut image fra files,
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"),GET_FROM_GALLERY);
+                break;
+
+            case R.id.Sladder_text:
+                this.sladder_edittext.setFocusable(true);
+        }
+    }
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -101,43 +128,50 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onBackPressed(){
-        Intent intent = new Intent(Sladreboksen_activity.this, HovedActivity.class);
-        startActivity(intent);
-    }
-    public void onSladreButtonSlick(View view){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        //henter ut image fra files,
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"),GET_FROM_GALLERY);
-        //mangler å vise filename i activity.
-    }
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //Detects request codes
         if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             file_string = selectedImage.getLastPathSegment();
-            sladder_image = selectedImage;
-            filename.setText(file_string);
             selectedImage.getEncodedAuthority();
-            Bitmap bitmap = null;
-
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                filename.setVisibility(View.VISIBLE);
+                Bitmap upload = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                this.bitmap = upload;
+
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
     }
 
+    public class MyTaskParams {
+        public String request;
+        public String content;
+        public String String_image;
+
+
+        MyTaskParams(){
+            this.request = null;
+            this.content = null;
+            this.String_image = null;
+        }
+        private String convertBitmap(Bitmap bitmapPicture) {
+            final int COMPRESSION_QUALITY = 100;
+            String encodedImage;
+            ByteArrayOutputStream byteArrayBitmapStream = new ByteArrayOutputStream();
+            bitmapPicture.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY,
+                    byteArrayBitmapStream);
+            byte[] b = byteArrayBitmapStream.toByteArray();
+            encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+            return encodedImage;
+        }
+    }
+
+
 }
+
 
 

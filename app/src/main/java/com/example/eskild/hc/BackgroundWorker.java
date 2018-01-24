@@ -1,6 +1,7 @@
 package com.example.eskild.hc;
 
 import android.content.Context;
+import android.media.ImageWriter;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -35,22 +36,47 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
         String type = params[0];
 
         if (type == "LOGIN"){
-            String login_url = "http://192.168.20.5:8000/sladreboks/get_auth_token/";
+            //for fjordgata 17
+            //String login_url = "http://192.168.20.5:8000/sladreboks/get_auth_token/";
+
+            //Husk å skifte når du er på en annen ipv4
+            String login_url = "http://192.168.1.6:8000/sladreboks/get_auth_token/";
             String user_name = params[1];
             String password = params[2];
             try {
                 URL url = new URL(login_url);
                 JSONObject jsonObject = new JSONObject();
+                jsonObject.put("username", user_name);
+                jsonObject.put("password", password);
+
+
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Accept", "application/json");
                 con.setRequestProperty("Content-Type", "application/json");
-
-
                 con.setDoOutput(true);
 
                 OutputStream outputStream = con.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                writer.write(String.valueOf(jsonObject));
+
+                writer.close();
+                outputStream.close();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+
+                while((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                int responseCode = con.getResponseCode();
+                System.out.println("Response Code : " + responseCode);
+
+                return String.valueOf(response);
 
 
 
@@ -83,14 +109,15 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
                 bufferedReader.close();
                 inputStream.close();
                 httpURLConnection.disconnect();*/
-                return null;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
+        /*
         } if (type == "SEND_SLADDER"){
             String url_string = "http://192.168.20.5:8000/sladreboks/rest/";
             String text = params[1];
@@ -127,7 +154,7 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+       */}
         return null;
     }
     @Override

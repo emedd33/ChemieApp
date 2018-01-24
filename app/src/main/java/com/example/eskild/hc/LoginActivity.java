@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -47,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 
         login_btn.setOnClickListener(new View.OnClickListener() {
 
+            @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
             @Override
             public void onClick(View v) {;
                 if (isNetworkAvailable()){
@@ -55,8 +58,26 @@ public class LoginActivity extends AppCompatActivity {
                     EditText password_text = (EditText)findViewById(R.id.password_text);
                     password = password_text.getText().toString();
 
+                    Context mContext = (Context) LoginActivity.this;
+
+                    BackgroundWorker Worker = new BackgroundWorker(mContext,progressbar);
+                    try {
+                        String Token = Worker.execute("LOGIN", email, password).get();
+                        if (Token != null){
+                            Intent intent = new Intent(LoginActivity.this, HovedActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Feil brukernavn og passord", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
                     //lager en back thread som skjekker om brukernavn & passord gir en authorization token.
-                    loginWithNetworkAvailable(progressbar);
                 } else {
                     Toast.makeText(LoginActivity.this, "Network is not available", Toast.LENGTH_SHORT).show();
                 }
@@ -64,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     private void loginWithNetworkAvailable(ProgressBar progressbar){
         Context mContext = (Context) this;
         BackgroundWorker backgroundWorker = new BackgroundWorker(mContext, progressbar);
@@ -89,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager cm =(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()){

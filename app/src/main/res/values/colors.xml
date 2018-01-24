@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303f9f</color>
     <color name="colorAccent">#FF4081</color>
     <color name="yellow_HC">#ffdb0d</color> <!-- må finne korrekt HEX for HC-gul-->
+    <color name="button_bottom">#8a8a5c</color>
+    <color name="button_top">#adad85</color>
 
     <!-- for å hindre et rendering problem legger jeg tl disse filene-->
     <item name="visible" type="id"/>
