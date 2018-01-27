@@ -2,12 +2,16 @@ package com.example.eskild.hc;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private String email;
     private String password;
     private Boolean access;
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +67,20 @@ public class LoginActivity extends AppCompatActivity {
 
                     BackgroundWorker Worker = new BackgroundWorker(mContext,progressbar);
                     try {
+
                         String Token = Worker.execute("LOGIN", email, password).get();
-                        if (Token != null){
+                        int respons = Worker.responsCode;
+                        if (respons==200){
+                            session = new Session(LoginActivity.this);
+                            session.setToken(Token);
+                            session.setusename(email);
                             Intent intent = new Intent(LoginActivity.this, HovedActivity.class);
                             startActivity(intent);
                             finish();
-                        } else {
+                        } else if (respons == 400) {
                             Toast.makeText(LoginActivity.this, "Feil brukernavn og passord", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Error code " +String.valueOf(respons) , Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (InterruptedException e) {
@@ -85,32 +97,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
-    private void loginWithNetworkAvailable(ProgressBar progressbar){
-        Context mContext = (Context) this;
-        BackgroundWorker backgroundWorker = new BackgroundWorker(mContext, progressbar);
-        String result = null;
-        try {
-            if (email.equals("admin") && password.equals("admin")) {
-                result = "success";
-            } else {
-                result = backgroundWorker.execute("LOGIN", email, password).get();
-            }
-            if (result.equals("success")) {
-                //
-                Intent intent = new Intent(LoginActivity.this, HovedActivity.class);
-                Toast.makeText(LoginActivity.this, "login success", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
-            } else {
-                Toast.makeText(LoginActivity.this, "Feil brukernavn/passord", Toast.LENGTH_SHORT).show();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-    }
     public boolean isNetworkAvailable() {
         ConnectivityManager cm =(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -121,4 +107,5 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
+
 }

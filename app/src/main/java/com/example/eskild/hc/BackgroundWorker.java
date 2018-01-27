@@ -30,17 +30,14 @@ import java.net.URLEncoder;
 public class BackgroundWorker extends AsyncTask<String, Void, String> {
     private Context context;
     private ProgressBar progressbar;
+    public int responsCode;
 
     @Override
     protected String doInBackground(String... params) {
         String type = params[0];
 
         if (type == "LOGIN"){
-            //for fjordgata 17
-            //String login_url = "http://192.168.20.5:8000/sladreboks/get_auth_token/";
-
-            //Husk å skifte når du er på en annen ipv4
-            String login_url = "http://192.168.1.6:8000/sladreboks/get_auth_token/";
+            String login_url = "https://chemie.no/api/api-auth/";
             String user_name = params[1];
             String password = params[2];
             try {
@@ -62,53 +59,22 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
 
                 writer.close();
                 outputStream.close();
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-
-                while((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
                 int responseCode = con.getResponseCode();
                 System.out.println("Response Code : " + responseCode);
+                String token = null;
+                if (responseCode== 200){
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuilder response = new StringBuilder();
 
-                return String.valueOf(response);
-
-
-
-
-                /*
-                URL url = new URL(login_url);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                httpURLConnection.setRequestProperty("User-Agent", "my-rest-app-v0.1");
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.setDoOutput(true);
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String post_data = URLEncoder.encode("user_name", "UTF-8")+"="+URLEncoder.encode(user_name,"UTF-8")+"&"
-                        +URLEncoder.encode("password", "UTF-8")+ "=" +URLEncoder.encode(password,"UTF-8");
-                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
-                String line = "";
-                String result = "";
-                while((line=bufferedReader.readLine())!= null){
-                    result += line;
+                    while((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+                    token = response.toString();
                 }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();*/
+                this.responsCode = responseCode;
+                return token;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -117,6 +83,7 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
         /*
         } if (type == "SEND_SLADDER"){
             String url_string = "http://192.168.20.5:8000/sladreboks/rest/";

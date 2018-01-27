@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,18 +26,25 @@ import java.util.concurrent.ExecutionException;
 public class Sladreboksen_activity extends AppCompatActivity implements View.OnClickListener {
     public Toolbar toolbar;
     public static final int GET_FROM_GALLERY = 3;
-    public TextView filename;
-    public String file_string;
+    public String filename_string;
     public String sladder_text;
     public Bitmap bitmap;
     public ProgressBar progress_send;
     public EditText sladder_edittext;
+    private TextView filename;
+    private Button delete_button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sladreboksen);
         this.sladder_edittext = (EditText)findViewById(R.id.Sladder_text);
         this.bitmap = null;
+
+        Button delete_button = (Button)findViewById(R.id.button_delete_image);
+        this.delete_button = delete_button;
+        delete_button.setEnabled(false);
+        delete_button.setVisibility(View.INVISIBLE);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,11 +72,15 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View v) {
         MyTaskParams myTaskParams = new MyTaskParams();
+        TextView filename = (TextView)findViewById(R.id.filename);
+        this.filename = filename;
+
         switch (v.getId()){
             case R.id.send_button:
                 myTaskParams.request = "SEND_SLADDER";
                 sladder_text = this.sladder_edittext.getText().toString();
                 myTaskParams.content = sladder_text;
+
                 BackgroundWorker_sladder Worker = new BackgroundWorker_sladder(this,progress_send);
                 if (sladder_text.equals("")){
                     if (this.bitmap == null){
@@ -76,11 +88,18 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
                     }
                 } else {
                     try {
-                        String String_image = myTaskParams.convertBitmap(this.bitmap);
-                        myTaskParams.String_image = String_image;
+                        if (this.bitmap!= null){
+                            String String_image = myTaskParams.convertBitmap(this.bitmap);
+                            //Her putter jeg image til null, for å rette det opp senere,
+                            myTaskParams.String_image = null;
+                        }
                         String result = Worker.execute(myTaskParams).get();
                         if (result.equals("201")){
                             Toast.makeText(this, "Sladder sendt", Toast.LENGTH_SHORT).show();
+                            filename.setText("");
+                            filename.setVisibility(View.INVISIBLE);
+                            sladder_edittext.setText("");
+                            delete_button.setVisibility(View.INVISIBLE);
                         } else {
                             Toast.makeText(this, "Error Response code:" + result, Toast.LENGTH_SHORT).show();
                         }
@@ -102,6 +121,14 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
 
             case R.id.Sladder_text:
                 this.sladder_edittext.setFocusable(true);
+                break;
+            case R.id.button_delete_image:
+                this.bitmap = null;
+                filename.setText("");
+                filename.setVisibility(View.INVISIBLE);
+                delete_button.setVisibility(View.INVISIBLE);
+                delete_button.setEnabled(false);
+
         }
     }
 
@@ -133,12 +160,16 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
         //Detects request codes
         if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
-            file_string = selectedImage.getLastPathSegment();
+            String filename_string = selectedImage.getLastPathSegment();
+            this.filename_string = filename_string;
             selectedImage.getEncodedAuthority();
             try {
                 Bitmap upload = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 this.bitmap = upload;
-
+                filename.setText("Ready to upload");
+                filename.setVisibility(View.VISIBLE);
+                delete_button.setEnabled(true);
+                delete_button.setVisibility(View.VISIBLE);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -147,17 +178,24 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
         }
     }
 
-    public class MyTaskParams {
+    class MyTaskParams {
         public String request;
         public String content;
         public String String_image;
+        private String token;
 
 
         MyTaskParams(){
             this.request = null;
             this.content = null;
             this.String_image = null;
+            this.token = null;
         }
+        private void setToken(String token){
+            this.token = token;
+        }
+        public String getToken() {return this.token;}
+
         private String convertBitmap(Bitmap bitmapPicture) {
             final int COMPRESSION_QUALITY = 100;
             String encodedImage;
