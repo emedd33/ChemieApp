@@ -1,10 +1,14 @@
 package com.example.eskild.hc;
 
 import android.content.Context;
+import android.media.ImageWriter;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -25,91 +30,98 @@ import java.net.URLEncoder;
 public class BackgroundWorker extends AsyncTask<String, Void, String> {
     private Context context;
     private ProgressBar progressbar;
+    public int responsCode;
 
     @Override
     protected String doInBackground(String... params) {
         String type = params[0];
 
-        if (type == "login"){
-            String login_url = "http://10.0.2.2/login.php";
+        if (type == "LOGIN"){
+            String login_url = "https://chemie.no/api/api-auth/";
             String user_name = params[1];
             String password = params[2];
             try {
                 URL url = new URL(login_url);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("username", user_name);
+                jsonObject.put("password", password);
 
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.setDoOutput(true);
 
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String post_data = URLEncoder.encode("user_name", "UTF-8")+"="+URLEncoder.encode(user_name,"UTF-8")+"&"
-                        +URLEncoder.encode("password", "UTF-8")+ "=" +URLEncoder.encode(password,"UTF-8");
-                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setDoOutput(true);
+
+                OutputStream outputStream = con.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                writer.write(String.valueOf(jsonObject));
+
+                writer.close();
                 outputStream.close();
+                int responseCode = con.getResponseCode();
+                System.out.println("Response Code : " + responseCode);
+                String token = null;
+                if (responseCode== 200){
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuilder response = new StringBuilder();
 
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
-                String line = "";
-                String result = "";
-                while((line=bufferedReader.readLine())!= null){
-                    result += line;
+                    while((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+                    token = response.toString();
                 }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-                return result;
+                this.responsCode = responseCode;
+                return token;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-        } if (type == "send_sladder"){
-            String sladder_text = params[1];
-            String url_string = "http://10.0.2.2/sendSladder.php";
+        /*
+        } if (type == "SEND_SLADDER"){
+            String url_string = "http://192.168.20.5:8000/sladreboks/rest/";
+            String text = params[1];
+            String Token = "Token 72cc07d3b7698f1c598f2e6c4c07614ea2e1d183";
             try {
                 URL url = new URL(url_string);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("content", text);
 
+                String JSON = jsonObject.toString();
 
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.setDoOutput(true);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Authorization", Token);
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Content-Type", "application/json");
 
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                con.setDoOutput(true);
 
-                // CSRF token
-                String post_data = URLEncoder.encode("sladder_tekst", "UTF-8")+"="+URLEncoder.encode(sladder_text,"UTF-8");
-                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-
+                OutputStream outputStream = con.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                writer.write(JSON);
+                writer.close();
                 outputStream.close();
 
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
-                String line = "";
-                String result = "";
-                while((line=bufferedReader.readLine())!= null){
-                    result += line;
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-                return result;
+                int responseCode = con.getResponseCode();
+                System.out.println(JSON);
+                System.out.println("Response Code : " + responseCode);
+                return String.valueOf(responseCode);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-        }
+       */}
         return null;
     }
     @Override

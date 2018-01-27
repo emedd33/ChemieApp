@@ -14,6 +14,7 @@ import android.widget.Toast;
 public class HovedActivity extends AppCompatActivity implements  View.OnClickListener {
     public static final String TAG = "MyActivity";
     private Toolbar toolbar;
+    private String Token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,7 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        //heisann, dette går bra
 
 
     }
@@ -42,6 +44,7 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
             case R.id.profile:
                 Toast.makeText(HovedActivity.this, "Profile", Toast.LENGTH_SHORT).show();
                 Intent profileintent = new Intent(this, myProfile.class);
+                profileintent.putExtra("Token",this.Token);
                 startActivity(profileintent);
                 return true;
 
@@ -65,6 +68,7 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
             case R.id.sladreboksen_button:{
                 Intent sladre_intent = new Intent(HovedActivity.this, Sladreboksen_activity.class);
                 Toast.makeText(HovedActivity.this, "Sladreboksen", Toast.LENGTH_SHORT).show();
+                sladre_intent.putExtra("Token",this.Token);
                 startActivity(sladre_intent);
                 break;
             }
