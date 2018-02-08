@@ -24,6 +24,7 @@
             android:id="@+id/sladreboksen_button"
             android:layout_width="125dp"
             android:layout_height="125dp"
+            android:background="@drawable/rounded_button"
             android:onClick="onClick"
             app:srcCompat="@mipmap/sladreboksen_icon" />
 
@@ -32,8 +33,9 @@
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:layout_column="4"
-            android:onClick="onClick"
             android:layout_row="0"
+            android:background="@drawable/rounded_button"
+            android:onClick="onClick"
             app:srcCompat="@mipmap/cake_icon" />
 
         <ImageButton
@@ -42,6 +44,7 @@
             android:layout_height="125dp"
             android:layout_column="0"
             android:layout_row="1"
+            android:background="@drawable/rounded_button"
             android:onClick="onClick"
             app:srcCompat="@mipmap/event_icon_white" />
     </GridLayout>

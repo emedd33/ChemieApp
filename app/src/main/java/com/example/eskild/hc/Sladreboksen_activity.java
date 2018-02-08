@@ -82,34 +82,30 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
                 myTaskParams.content = sladder_text;
 
                 BackgroundWorker_sladder Worker = new BackgroundWorker_sladder(this,progress_send);
-                if (sladder_text.equals("")){
-                    if (this.bitmap == null){
-                        break;
+                if (sladder_text.equals("") && (this.bitmap != null)){
+                        myTaskParams.content = "Image upload";
+                }
+                try {
+                    if (this.bitmap!= null){
+                        String String_image = myTaskParams.convertBitmap(this.bitmap);
+                        myTaskParams.String_image = String_image;
                     }
-                } else {
-                    try {
-                        if (this.bitmap!= null){
-                            String String_image = myTaskParams.convertBitmap(this.bitmap);
-                            //Her putter jeg image til null, for å rette det opp senere,
-                            myTaskParams.String_image = null;
-                        }
-                        String result = Worker.execute(myTaskParams).get();
-                        if (result.equals("201")){
-                            Toast.makeText(this, "Sladder sendt", Toast.LENGTH_SHORT).show();
-                            filename.setText("");
-                            filename.setVisibility(View.INVISIBLE);
-                            sladder_edittext.setText("");
-                            delete_button.setVisibility(View.INVISIBLE);
-                        } else {
-                            Toast.makeText(this, "Error Response code:" + result, Toast.LENGTH_SHORT).show();
-                        }
+                    String result = Worker.execute(myTaskParams).get();
+                    if (result.equals("201")){
+                        Toast.makeText(this, "Sladder sendt", Toast.LENGTH_SHORT).show();
+                        filename.setText("");
+                        filename.setVisibility(View.INVISIBLE);
+                        sladder_edittext.setText("");
+                        delete_button.setVisibility(View.INVISIBLE);
+                    } else {
+                        Toast.makeText(this, "Error Response code:" + result, Toast.LENGTH_SHORT).show();
+                    }
                         this.sladder_edittext.setText("");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     }
-                }
                 break;
             case R.id.image_buton:
                 Intent intent = new Intent();
@@ -142,7 +138,7 @@ public class Sladreboksen_activity extends AppCompatActivity implements View.OnC
                 Intent intent = new Intent(Sladreboksen_activity.this, HovedActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.profile:
+            case R.id.profile_image:
                 Toast.makeText(Sladreboksen_activity.this, "Profile", Toast.LENGTH_SHORT).show();
                 Intent profileintent = new Intent(this, myProfile.class);
                 startActivity(profileintent);

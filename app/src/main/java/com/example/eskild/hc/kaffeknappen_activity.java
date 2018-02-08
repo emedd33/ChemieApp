@@ -88,7 +88,7 @@ public class kaffeknappen_activity extends AppCompatActivity {
                 Intent intent = new Intent(kaffeknappen_activity.this, HovedActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.profile:
+            case R.id.profile_image:
                 Toast.makeText(kaffeknappen_activity.this, "Profile", Toast.LENGTH_SHORT).show();
                 Intent profileintent = new Intent(this, myProfile.class);
                 startActivity(profileintent);

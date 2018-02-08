@@ -28,10 +28,18 @@ public class BackgroundWorker_sladder extends AsyncTask<Sladreboksen_activity.My
     @Override
     protected String doInBackground(Sladreboksen_activity.MyTaskParams... params) {
         Sladreboksen_activity.MyTaskParams myTaskparams = params[0];
-            String url_string = "https://chemie.no/api/sladreboks/submission/";
-            Session session = new Session(context);
-            String Token_pre = session.getToken();
-            String token = "token "+ Token_pre.substring(10,session.getToken().length()-2);
+
+            // Fjordgata 17 ipv4
+            //String url_string = "http://192.168.20.10:8000/api/sladreboks/submission/";
+
+            // url til chemie.no
+            //String url_string = "https://chemie.no/api/sladreboks/submission/";
+
+            String url_string = "http://10.22.8.81:8000/api/sladreboks/submission/";
+
+
+            String token = "";
+            //String token = "token "+ Token_pre.substring(10,session.getToken().length()-2);
             try {
                 URL url = new URL(url_string);
                 JSONObject jsonObject = new JSONObject();

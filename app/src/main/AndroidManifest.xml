@@ -53,7 +53,7 @@
             android:parentActivityName=".HovedActivity"
             <meta-data
                 android:name="android.support.PARRENT_ACTIVITY"
-                android:value=".HovedActivity"></meta-data>
+                android:value=".HovedActivity" />
         </activity>
         <activity
             android:name=".Sladreboksen_activity"
@@ -62,9 +62,18 @@
             android:parentActivityName=".HovedActivity"
             <meta-data
                 android:name="android.support.PARRENT_ACTIVITY"
-                android:value=".HovedActivity"></meta-data>
+                android:value=".HovedActivity" />
         </activity>
-        <activity android:name=".myProfile"></activity>
+
+        <activity
+            android:name=".myProfile"
+            android:label="myProfile"
+            android:theme="@style/Hoved_theme">
+            android:parentActivityName=".HovedActivity"
+            <meta-data
+                android:name="android.support.PARRENT_ACTIVITY"
+                android:value=".HovedActivity" />
+        </activity>
     </application>
 
 </manifest>
