@@ -1,11 +1,11 @@
 package com.example.eskild.hc;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.media.ImageWriter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.widget.ProgressBar;
+import android.preference.PreferenceManager;
+import android.util.JsonReader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,30 +13,23 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLEncoder;
 
-/**
+/*
  * Created by Eskild on 29.10.2017.
  */
 
 public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
     private Context context;
-    private String token;
+    ProgressDialog progressBar;
 
     BackgroundWorker_login(Context con){
         this.context = con;
-    }
-
-    public String getToken() {
-        return token;
     }
 
     @Override
@@ -56,9 +49,10 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
 
         // R21
         //String login_url = "http://10.22.11.147:8000/api/api-auth/";
-
+        int respons = 500;
         String user_name = params[0];
         String password = params[1];
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         try {
             URL url = new URL(login_url);
             JSONObject jsonObject = new JSONObject();
@@ -81,7 +75,7 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
             int responseCode = con.getResponseCode();
             System.out.println("Response Code : " + responseCode);
             String token = null;
-            if (responseCode== 200){
+            if (responseCode == 200) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String inputLine;
                 StringBuilder response = new StringBuilder();
@@ -90,29 +84,26 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
                     response.append(inputLine);
                 }
                 in.close();
-                token = response.toString();
-
+                String token_pre = response.toString();
+                token = "token " + token_pre.substring(10, token_pre.length() - 2);
+                prefs.edit().putString("token",token).commit();
+                respons = con.getResponseCode();
             }
-            int response = con.getResponseCode();
-            this.token = token;
-            return response;
-        } catch (MalformedURLException e) {
+        } catch (ProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return respons;
     }
-    @Override
+        @Override
     protected void onPreExecute(){
-
     }
 
     @Override
     protected void onPostExecute(Integer result) {
-
     }
 
 }

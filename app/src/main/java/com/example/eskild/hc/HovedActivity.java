@@ -16,19 +16,12 @@ import android.widget.Toast;
 import static android.provider.Contacts.SettingsColumns.KEY;
 
 public class HovedActivity extends AppCompatActivity implements  View.OnClickListener {
-    public static final String TAG = "MyActivity";
     private Toolbar toolbar;
-    private String Token;
-    private Session session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hoved);
-
-        Intent i = getIntent();
-        this.session = getIntent().getExtras().getParcelable("session");
-        //this.session = i.getParcelableExtra("session");
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,30 +34,23 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.v(TAG, "index=");
-
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Intent intent_pre = getIntent();
-        this.session = intent_pre.getParcelableExtra("session");
         switch (id) {
             case R.id.profile_image:
                 Toast.makeText(HovedActivity.this, "Profile", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, myProfile.class);
-                intent.putExtra("session",this.session);
                 startActivity(intent);
                 return true;
 
             case R.id.Settings:
                 Toast.makeText(HovedActivity.this, "Settings", Toast.LENGTH_SHORT).show();
                 return true;
-
 
         }
         return super.onOptionsItemSelected(item);
@@ -77,20 +63,15 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        Intent intent_pre = getIntent();
-        this.session=intent_pre.getParcelableExtra("session");
         switch (v.getId()) {
             case R.id.sladreboksen_button:{
                 Intent intent = new Intent(HovedActivity.this, Sladreboksen_activity.class);
-                intent.putExtra("session",this.session);
                 Toast.makeText(HovedActivity.this, "Sladreboksen", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
                 break;
             }
             case R.id.cake_button:{
                 Intent cake_intent = new Intent(HovedActivity.this, kaffeknappen_activity.class);
-                cake_intent.putExtra("session",this.session);
-
                 Toast.makeText(HovedActivity.this, "Kake- og kaffekknappen", Toast.LENGTH_SHORT).show();
                 startActivity(cake_intent);
                 break;

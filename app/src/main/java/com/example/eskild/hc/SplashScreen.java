@@ -18,14 +18,10 @@ public class SplashScreen extends AppCompatActivity {
         this.prefs = prefs;
         if (prefs.getBoolean("Access",false)){
             Intent intent = new Intent(this, HovedActivity.class);
-            Session session = new Session(prefs);
-            intent.putExtra("session",session);
             startActivity(intent);
             finish();
         } else {
             Intent intent = new Intent(this, LoginActivity.class);
-            Session session = new Session(prefs);
-            intent.putExtra("session",session);
             startActivity(intent);
             finish();
 

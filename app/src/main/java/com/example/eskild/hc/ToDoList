@@ -1,6 +1,3 @@
 To do list
-- Legge til fonts
-- Lage innloggingsystem
-- Gjøre buttons penere
-- Lage pene icons
--
+-Progressbar til backgroundtasks
+-Timer til httpConnection i background threads

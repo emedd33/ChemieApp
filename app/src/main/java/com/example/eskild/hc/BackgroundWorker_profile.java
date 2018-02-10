@@ -1,15 +1,20 @@
 package com.example.eskild.hc;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
+import android.util.Base64;
 import android.util.JsonReader;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,17 +29,17 @@ import java.util.List;
  * Created by Eskild on 29.01.2018.
  */
 
-public class BackgroundWorker_profile extends AsyncTask<Session, Void, Integer> {
+public class BackgroundWorker_profile extends AsyncTask<Void, Void, Void> {
     Context context;
-    public BackgroundWorker_profile(Session session) {
-        context = session.getContext();
+    private ProgressDialog progressBar;
+
+    public BackgroundWorker_profile(Context context) {
+        this.context = context;
     }
 
 
     @Override
-    protected Integer doInBackground(Session... params) {
-        Session session = params[0];
-
+    protected Void doInBackground(Void... params) {
         // ipv4 for Fjordgata 17
         String url_string = "http://192.168.20.4:8000/api/profile/profile/";
 
@@ -50,7 +55,8 @@ public class BackgroundWorker_profile extends AsyncTask<Session, Void, Integer> 
         // R21
         //String url_string = "http://10.22.11.147:8000/api/profile/profile/";
 
-        String token = session.getToken();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String token = prefs.getString("token","");
         URL url = null;
         try {
 
@@ -65,16 +71,16 @@ public class BackgroundWorker_profile extends AsyncTask<Session, Void, Integer> 
             JsonReader jsonReader = new JsonReader(inputStreamReader);
 
             jsonReader.beginArray();
-            while (jsonReader.hasNext()) {
-                setUserInfoFromJson(jsonReader,session); // her henter jeg ut data fra JSON og legger dem i session
+            while (jsonReader.hasNext()){
+                setUserInfoFromJson(jsonReader,prefs);// her henter jeg ut data fra JSON og legger dem i session
             }
-            jsonReader.endArray();
+            jsonReader.close();
             inputStreamReader.close();
             int respons = con.getResponseCode();
             if (respons== 200){
-                session.setAccess(true);
+                prefs.edit().putBoolean("Access",true).commit();
             }
-            return respons;
+
         } catch (ProtocolException e1) {
             e1.printStackTrace();
         } catch (MalformedURLException e1) {
@@ -85,7 +91,7 @@ public class BackgroundWorker_profile extends AsyncTask<Session, Void, Integer> 
         return null;
     }
 
-    private void setUserInfoFromJson(JsonReader jsonReader,Session session) throws IOException {
+    private void setUserInfoFromJson(JsonReader jsonReader, SharedPreferences prefs) throws IOException {
         String acces_card = "none";
         int phone_number = -1;
         String allergies = "none";
@@ -94,25 +100,49 @@ public class BackgroundWorker_profile extends AsyncTask<Session, Void, Integer> 
             String name =jsonReader.nextName();
             if (name.equals("phone_number")){
                 phone_number = jsonReader.nextInt();
-                session.setPhoneNumber(phone_number);
+                prefs.edit().putInt("phone_number", phone_number).commit();
 
             } else if (name.equals("access_card")) {
                 String access_card = jsonReader.nextString();
-                session.setAccesCard(acces_card);
+                prefs.edit().putString("access_card", access_card).commit();
 
             } else if (name.equals("image_primary")) {
                 String url = jsonReader.nextString();
                 InputStream is = (InputStream) new URL(url).getContent();
                 Bitmap image = BitmapFactory.decodeStream((InputStream)new URL(url).getContent());
-                session.setImage(image);
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+                byte[] b = baos.toByteArray();
+                String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                prefs.edit().putString("image",encodedImage).commit();
 
             } else if (name.equals("allergies")){
                 allergies = jsonReader.nextString();
-                session.setAllergies(allergies);
+                prefs.edit().putString("allergies", allergies).commit();
+
             } else {
                 jsonReader.skipValue();
             }
         }
-        jsonReader.endObject();
+    }
+
+    @Override
+    protected void onPreExecute(){
+        progressBar = new ProgressDialog(context);
+        progressBar.setCancelable(true);
+        progressBar.setMessage("Login in...");
+        progressBar.show();
+    }
+
+
+    public Bitmap DecodedImage(String encodedImage, SharedPreferences prefs) {
+        String previouslyEncodedImage = prefs.getString("image", "");
+        Bitmap bitmap = null;
+        if( !previouslyEncodedImage.equalsIgnoreCase("") ){
+            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+        }
+        return bitmap;
     }
 }
