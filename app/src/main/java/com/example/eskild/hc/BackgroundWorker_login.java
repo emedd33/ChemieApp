@@ -36,10 +36,13 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
     protected Integer doInBackground(String... params) {
 
         //Fjordgata 17 ipv4
-        String login_url = "http://192.168.20.4:8000/api/api-auth/";
+        //String login_url = "http://192.168.20.4:8000/api/api-auth/";
 
         // Lesesal
         //String login_url = "http://10.22.26.196:8000/api/api-auth/";
+
+        // Hos Kristine
+        String login_url = "http://192.168.1.6:8000/api/api-auth/";
 
         // Chemie.no url
         //String login_url = "https://chemie.no/api/api-auth/";
@@ -100,10 +103,15 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
     }
         @Override
     protected void onPreExecute(){
+            progressBar = new ProgressDialog(context);
+            progressBar.setCancelable(true);
+            progressBar.setMessage("Login in...");
+            progressBar.show();
     }
 
     @Override
     protected void onPostExecute(Integer result) {
+        progressBar.dismiss();
     }
 
 }

@@ -28,6 +28,7 @@ public class myProfile extends AppCompatActivity {
     Button logout_button;
     Bitmap profile_image;
     private ImageView img;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class myProfile extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.logout_button = (Button)findViewById(R.id.button_logout);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
+        this.prefs = prefs;
         if (savedInstanceState==null){
             setInfo(prefs);
         }
@@ -67,6 +68,7 @@ public class myProfile extends AppCompatActivity {
     public void onClick(View view){
          switch (view.getId()){
              case R.id.button_logout:
+                 prefs.edit().clear().commit();
                  Intent intent = new Intent(this,LoginActivity.class);
                  startActivity(intent);
                  break;
