@@ -53,24 +53,14 @@
         app:srcCompat="@mipmap/profile_picture_defalt" />
 
     <TextView
-        android:id="@+id/username_view"
+        android:id="@+id/acces_card_view"
         android:layout_width="95dp"
         android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Brukernavn:"
+        android:text="Student-Kort: "
         app:layout_constraintStart_toStartOf="@+id/profile_image"
         app:layout_constraintTop_toBottomOf="@+id/profile_image" />
-
-    <TextView
-        android:id="@+id/acces_card_view"
-        android:layout_width="95dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:text="Student-Kort: "
-        app:layout_constraintEnd_toEndOf="@+id/username_view"
-        app:layout_constraintStart_toStartOf="@+id/username_view"
-        app:layout_constraintTop_toBottomOf="@+id/username_view" />
 
     <TextView
         android:id="@+id/Allergier_view"
@@ -93,22 +83,12 @@
         app:layout_constraintTop_toBottomOf="@+id/Allergier_view" />
 
     <TextView
-        android:id="@+id/email_edit"
-        android:layout_width="95dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_image"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
-
-    <TextView
         android:id="@+id/acces_card_edit"
         android:layout_width="95dp"
         android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/email_edit"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/email_edit"
-        app:layout_constraintTop_toBottomOf="@+id/email_edit" />
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toTopOf="@+id/acces_card_view" />
 
     <TextView
         android:id="@+id/allergier_edit"
