@@ -44,13 +44,13 @@ public class BackgroundWorker_profile extends AsyncTask<Void, Void, Void> {
         //String url_string = "http://192.168.20.4:8000/api/profile/profile/";
 
         // Lesesalen
-        //String url_string = "http://10.22.26.196:8000/api/profile/profile/";
+        String url_string = "http://10.22.24.171:8000/api/profile/profile/";
 
         // url for nettsidene
         // String url_string = "https://chemie.no/api/profile/profile/";
 
         // Hos Kristine
-        String url_string = "http://192.168.1.6:8000/api/profile/profile/";
+        //String url_string = "http://192.168.1.6:8000/api/profile/profile/";
 
         // K26
         //String url_string = "http://10.22.8.81:8000/api/profile/profile/";

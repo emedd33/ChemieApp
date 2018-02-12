@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "148794277422",
+    "firebase_url": "https://chemienotification.firebaseio.com",
+    "project_id": "chemienotification",
+    "storage_bucket": "chemienotification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148794277422:android:ca1affd3bb0866a2",
+        "android_client_info": {
+          "package_name": "com.example.eskild.hc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "148794277422-1gp53huuvtmqgemghercsaacj1j7bt2p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.eskild.hc",
+            "certificate_hash": "5a08ac23d5b5d197df50cc00d0215bff516eb4f0"
+          }
+        },
+        {
+          "client_id": "148794277422-305hvs21l68mb7vtkqhmj35lsn5847at.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeUCpcBG2OicjQr2AWKSGznBnhF5up4Tw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "148794277422-305hvs21l68mb7vtkqhmj35lsn5847at.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

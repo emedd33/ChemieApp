@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 public class myProfile extends AppCompatActivity {
     Toolbar toolbar1;
     String allegier;
@@ -69,6 +71,7 @@ public class myProfile extends AppCompatActivity {
          switch (view.getId()){
              case R.id.button_logout:
                  prefs.edit().clear().commit();
+                 FirebaseMessaging.getInstance().unsubscribeFromTopic("Messages");
                  Intent intent = new Intent(this,LoginActivity.class);
                  startActivity(intent);
                  break;

@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.ExecutionException;
 
@@ -62,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, HovedActivity.class);
                             BackgroundWorker_profile worker = new BackgroundWorker_profile(mContext);
                             worker.execute();
+                            FirebaseMessaging.getInstance().subscribeToTopic("Messages");
                             startActivity(intent);
                             finish();
 
