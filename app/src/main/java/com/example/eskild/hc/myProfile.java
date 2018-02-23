@@ -17,10 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 
 public class myProfile extends AppCompatActivity {
     Toolbar toolbar1;
@@ -31,6 +33,9 @@ public class myProfile extends AppCompatActivity {
     Bitmap profile_image;
     private ImageView img;
     private SharedPreferences prefs;
+    public Switch switch_kaffe;
+    public Switch switch_event;
+    public Switch switch_felles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +47,24 @@ public class myProfile extends AppCompatActivity {
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        this.switch_kaffe = (Switch)findViewById(R.id.switch_kaffe);
+        this.switch_felles = (Switch)findViewById(R.id.switch_kaffe);
+        this.switch_event = (Switch)findViewById(R.id.switch_event);
         this.logout_button = (Button)findViewById(R.id.button_logout);
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         this.prefs = prefs;
+
+        this.switch_felles.setChecked(prefs.getBoolean("Felles",false));
+        this.switch_kaffe.setChecked(prefs.getBoolean("Kaffe",false));
+        this.switch_event.setChecked(prefs.getBoolean("Event",false));
+
         if (savedInstanceState==null){
             setInfo(prefs);
         }
     }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -71,9 +87,44 @@ public class myProfile extends AppCompatActivity {
          switch (view.getId()){
              case R.id.button_logout:
                  prefs.edit().clear().commit();
-                 FirebaseMessaging.getInstance().unsubscribeFromTopic("Messages");
+                 FirebaseMessaging.getInstance().unsubscribeFromTopic("Kaffe");
+                 FirebaseMessaging.getInstance().unsubscribeFromTopic("Event");
+                 FirebaseMessaging.getInstance().unsubscribeFromTopic("Felles");
                  Intent intent = new Intent(this,LoginActivity.class);
                  startActivity(intent);
+                 break;
+             case R.id.switch_kaffe:
+                 if (prefs.getBoolean("Kaffe",false)){
+                     prefs.edit().putBoolean("Kaffe",false).commit();
+                     switch_kaffe.setChecked(false);
+                     FirebaseMessaging.getInstance().unsubscribeFromTopic("Event");
+                 } else {
+                     prefs.edit().putBoolean("Kaffe",true).commit();
+                     switch_kaffe.setChecked(true);
+                     FirebaseMessaging.getInstance().subscribeToTopic("Kaffe");
+                 }
+                 break;
+             case R.id.switch_event:
+                 if (prefs.getBoolean("Event",false)){
+                     prefs.edit().putBoolean("Event",false).commit();
+                     switch_event.setChecked(false);
+                     FirebaseMessaging.getInstance().unsubscribeFromTopic("Event");
+                 } else {
+                     prefs.edit().putBoolean("Event",true).commit();
+                     switch_event.setChecked(true);
+                     FirebaseMessaging.getInstance().subscribeToTopic("Event");
+                 }
+                 break;
+             case R.id.switch_felles:
+                 if (prefs.getBoolean("Felles",false)){
+                     prefs.edit().putBoolean("Felles",false).commit();
+                     switch_felles.setChecked(false);
+                     FirebaseMessaging.getInstance().unsubscribeFromTopic("Felles");
+                 } else {
+                     prefs.edit().putBoolean("Felles",true).commit();
+                     switch_felles.setChecked(true);
+                     FirebaseMessaging.getInstance().subscribeToTopic("Felles");
+                 }
                  break;
          }
 

@@ -64,7 +64,17 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, HovedActivity.class);
                             BackgroundWorker_profile worker = new BackgroundWorker_profile(mContext);
                             worker.execute();
-                            FirebaseMessaging.getInstance().subscribeToTopic("Messages");
+
+                            //Legger til subspriction for notifiction fra Firebase,
+                            // default vil brukeren være subscriped når han logger inn.
+                            FirebaseMessaging.getInstance().subscribeToTopic("Kaffe");
+                            FirebaseMessaging.getInstance().subscribeToTopic("Event");
+                            FirebaseMessaging.getInstance().subscribeToTopic("Felles");
+                            prefs.edit().putBoolean("Kaffe",true);
+                            prefs.edit().putBoolean("Event",true);
+                            prefs.edit().putBoolean("Felles",true);
+                            prefs.edit().commit();
+
                             startActivity(intent);
                             finish();
 

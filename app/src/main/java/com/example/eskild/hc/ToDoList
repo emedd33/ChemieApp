@@ -2,3 +2,4 @@ To do list
 -Progressbar til backgroundtasks
 -Timer til httpConnection i background threads
 -Fikse Bitmap remory loss for ProfilePicture, shut down etter 4 ganger myProfile Activation
+-Icon til Notification, både active og background

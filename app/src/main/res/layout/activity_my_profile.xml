@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="vertical"
     android:theme="@android:style/Theme.NoTitleBar"
     tools:context="com.example.eskild.hc.myProfile">
 
@@ -37,8 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/profile_image"
@@ -60,7 +60,8 @@
         android:layout_marginTop="8dp"
         android:text="Student-Kort: "
         app:layout_constraintStart_toStartOf="@+id/profile_image"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_image"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/Allergier_view"
@@ -88,7 +89,8 @@
         android:layout_height="30dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="@+id/profile_image"
-        app:layout_constraintTop_toTopOf="@+id/acces_card_view" />
+        app:layout_constraintTop_toTopOf="@+id/acces_card_view"
+        android:layout_marginRight="8dp" />
 
     <TextView
         android:id="@+id/allergier_edit"
@@ -107,7 +109,57 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="@+id/allergier_edit"
         app:layout_constraintStart_toStartOf="@+id/allergier_edit"
-        app:layout_constraintTop_toBottomOf="@+id/allergier_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/allergier_edit"
+        android:layout_marginLeft="8dp" />
+
+    <Switch
+        android:id="@+id/switch_kaffe"
+        android:layout_width="226dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:onClick="onClick"
+        android:switchTextAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:text="Kaffe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Switch
+        android:id="@+id/switch_event"
+        android:layout_width="226dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="8dp"
+        android:onClick="onClick"
+        android:switchTextAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:text="Eventer"
+        app:layout_constraintEnd_toEndOf="@+id/switch_kaffe"
+        app:layout_constraintStart_toStartOf="@+id/switch_kaffe"
+        app:layout_constraintTop_toBottomOf="@+id/switch_kaffe" />
+
+    <Switch
+        android:id="@+id/switch_felles"
+        android:layout_width="226dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="8dp"
+        android:onClick="onClick"
+        android:switchTextAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:text="Fellesbekjed"
+        app:layout_constraintEnd_toEndOf="@+id/switch_event"
+        app:layout_constraintStart_toStartOf="@+id/switch_event"
+        app:layout_constraintTop_toBottomOf="@+id/switch_event"
+        tools:checked="false" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="181dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_edittext"
+        android:text="Instillinger for notification"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_dark"
+        app:layout_constraintStart_toStartOf="@+id/telefon_view"
+        app:layout_constraintTop_toBottomOf="@+id/telefon_view" />
 
 
 </android.support.constraint.ConstraintLayout>
