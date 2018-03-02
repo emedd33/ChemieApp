@@ -28,9 +28,7 @@ import java.util.concurrent.ExecutionException;
 public class LoginActivity extends AppCompatActivity {
     private String username;
     private String password;
-    private Boolean access;
     private Context mContext;
-    ProgressDialog progressBar;
     public SharedPreferences prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +41,14 @@ public class LoginActivity extends AppCompatActivity {
     public void onClick(View v) {
 
         switch (v.getId()) { //finner hvilken knapp som er trykket
-            case R.id.login_button: // Button for login
+            case R.id.btn_login: // Button for login
 
                 if (isNetworkAvailable()){ // Skjekker om brukeren er koblet til nettet.
 
                     // henter ut data som er skrevet inn i aktiviteten
-                    EditText username_text = (EditText)findViewById(R.id.email_text);
+                    EditText username_text = (EditText)findViewById(R.id.input_email);
                     username = username_text.getText().toString();
-                    EditText password_text = (EditText)findViewById(R.id.password_text);
+                    EditText password_text = (EditText)findViewById(R.id.input_password);
                     password = password_text.getText().toString();
 
                     // starter Backthread for login.
@@ -73,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                             prefs.edit().putBoolean("Kaffe",true);
                             prefs.edit().putBoolean("Event",true);
                             prefs.edit().putBoolean("Felles",true);
+                            prefs.edit().putBoolean("Access",true).commit();
                             prefs.edit().commit();
 
                             startActivity(intent);

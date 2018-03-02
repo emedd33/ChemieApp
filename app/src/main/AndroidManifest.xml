@@ -14,15 +14,15 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -51,25 +51,6 @@
             android:label="@string/app_name"
             android:theme="@style/Hoved_theme" />
         <activity
-            android:name=".kaffeknappen_activity"
-            android:label="Kaffeknappen"
-            android:theme="@style/Hoved_theme">
-            android:parentActivityName=".HovedActivity"
-            <meta-data
-                android:name="android.support.PARRENT_ACTIVITY"
-                android:value=".HovedActivity" />
-        </activity>
-        <activity
-            android:name=".Sladreboksen_activity"
-            android:label="Sladreboksen"
-            android:theme="@style/Hoved_theme">
-            android:parentActivityName=".HovedActivity"
-            <meta-data
-                android:name="android.support.PARRENT_ACTIVITY"
-                android:value=".HovedActivity" />
-        </activity>
-
-        <activity
             android:name=".myProfile"
             android:label="myProfile"
             android:theme="@style/Hoved_theme">
@@ -78,26 +59,24 @@
                 android:name="android.support.PARRENT_ACTIVITY"
                 android:value=".HovedActivity" />
         </activity>
-        <service
-            android:name=".MyFirebaseInstanceIDService">
+
+        <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_menu_camera" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+            android:resource="@drawable/notification_main" />
+        <!--
+             Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+
     </application>
 
 </manifest>

@@ -14,8 +14,8 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.contex = this;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        this.prefs = prefs;
+        this.prefs  = PreferenceManager.getDefaultSharedPreferences(this);
+
         if (prefs.getBoolean("Access",false)){
             Intent intent = new Intent(this, HovedActivity.class);
             startActivity(intent);
@@ -24,7 +24,6 @@ public class SplashScreen extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
-
         }
 
     }

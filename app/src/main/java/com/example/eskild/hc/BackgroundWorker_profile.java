@@ -41,10 +41,10 @@ public class BackgroundWorker_profile extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         // ipv4 for Fjordgata 17
-        //String url_string = "http://192.168.20.4:8000/api/profile/profile/";
+        String url_string = "http://10.22.27.117:8000/api/profile/profile/";
 
         // Lesesalen
-        String url_string = "http://10.22.24.171:8000/api/profile/profile/";
+        //String url_string = "http://10.22.24.171:8000/api/profile/profile/";
 
         // url for nettsidene
         // String url_string = "https://chemie.no/api/profile/profile/";
@@ -60,10 +60,9 @@ public class BackgroundWorker_profile extends AsyncTask<Void, Void, Void> {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String token = prefs.getString("token","");
-        URL url = null;
         try {
 
-            url = new URL(url_string);
+            URL url = new URL(url_string);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Authorization", token);
@@ -75,14 +74,10 @@ public class BackgroundWorker_profile extends AsyncTask<Void, Void, Void> {
 
             jsonReader.beginArray();
             while (jsonReader.hasNext()){
-                setUserInfoFromJson(jsonReader,prefs);// her henter jeg ut data fra JSON og legger dem i session
+                setUserInfoFromJson(jsonReader,prefs); // her henter jeg ut data fra JSON og legger dem i session
             }
             jsonReader.close();
             inputStreamReader.close();
-            int respons = con.getResponseCode();
-            if (respons== 200){
-                prefs.edit().putBoolean("Access",true).commit();
-            }
 
         } catch (ProtocolException e1) {
             e1.printStackTrace();
@@ -96,33 +91,25 @@ public class BackgroundWorker_profile extends AsyncTask<Void, Void, Void> {
 
     private void setUserInfoFromJson(JsonReader jsonReader, SharedPreferences prefs) throws IOException {
         String acces_card = "none";
-        int phone_number = -1;
-        String allergies = "none";
         jsonReader.beginObject();
         while ( jsonReader.hasNext()){
             String name =jsonReader.nextName();
-            if (name.equals("phone_number")){
-                phone_number = jsonReader.nextInt();
-                prefs.edit().putInt("phone_number", phone_number).commit();
 
-            } else if (name.equals("access_card")) {
+            if (name.equals("access_card")) {
+
                 String access_card = jsonReader.nextString();
                 prefs.edit().putString("access_card", access_card).commit();
 
             } else if (name.equals("image_primary")) {
                 String url = jsonReader.nextString();
-                InputStream is = (InputStream) new URL(url).getContent();
                 Bitmap image = BitmapFactory.decodeStream((InputStream)new URL(url).getContent());
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+                image.compress(Bitmap.CompressFormat.JPEG, 40, baos);
                 byte[] b = baos.toByteArray();
                 String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-                prefs.edit().putString("image",encodedImage).commit();
 
-            } else if (name.equals("allergies")){
-                allergies = jsonReader.nextString();
-                prefs.edit().putString("allergies", allergies).commit();
+                prefs.edit().putString("image",encodedImage).commit();
 
             } else {
                 jsonReader.skipValue();

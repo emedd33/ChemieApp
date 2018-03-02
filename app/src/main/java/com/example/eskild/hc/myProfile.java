@@ -49,7 +49,7 @@ public class myProfile extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         this.switch_kaffe = (Switch)findViewById(R.id.switch_kaffe);
-        this.switch_felles = (Switch)findViewById(R.id.switch_kaffe);
+        this.switch_felles = (Switch)findViewById(R.id.switch_felles);
         this.switch_event = (Switch)findViewById(R.id.switch_event);
         this.logout_button = (Button)findViewById(R.id.button_logout);
 
@@ -97,7 +97,7 @@ public class myProfile extends AppCompatActivity {
                  if (prefs.getBoolean("Kaffe",false)){
                      prefs.edit().putBoolean("Kaffe",false).commit();
                      switch_kaffe.setChecked(false);
-                     FirebaseMessaging.getInstance().unsubscribeFromTopic("Event");
+                     FirebaseMessaging.getInstance().unsubscribeFromTopic("Kaffe");
                  } else {
                      prefs.edit().putBoolean("Kaffe",true).commit();
                      switch_kaffe.setChecked(true);
@@ -168,16 +168,12 @@ public class myProfile extends AppCompatActivity {
         }
 
         TextView access_card = (TextView)findViewById(R.id.acces_card_edit);
-        TextView telefon = (TextView)findViewById(R.id.telefon_edit);
-        TextView allergi = (TextView)findViewById(R.id.allergier_edit);
 
         this.allegier = prefs.getString("allergies","");
         this.access_card = prefs.getString("access_card","");
         this.phone_number = prefs.getInt("phone_number",22225555);
 
         access_card.setText(this.access_card);
-        telefon.setText(String.valueOf(this.phone_number));
-        allergi.setText(this.allegier);
 
 
     }

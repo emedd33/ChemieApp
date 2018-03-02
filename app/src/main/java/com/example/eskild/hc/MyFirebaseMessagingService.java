@@ -35,7 +35,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Notification kaffe_noti = new Notification.Builder(this)
                     .setContentTitle("Chemie")
                     .setContentText(content)
-                    .setSmallIcon(R.drawable.ic_menu_send)
+                    .setSmallIcon(R.drawable.notification_main)
                     .setContentIntent(pendingIntent).getNotification();
             kaffe_noti.flags = Notification.FLAG_AUTO_CANCEL;
             NotificationManager nm = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);

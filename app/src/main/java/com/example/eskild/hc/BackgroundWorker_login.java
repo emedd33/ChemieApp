@@ -36,10 +36,10 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
     protected Integer doInBackground(String... params) {
 
         //Fjordgata 17 ipv4
-        //String login_url = "http://192.168.20.4:8000/api/api-auth/";
+        //String login_url = "http://192.168.20.2:8000/api/api-auth/";
 
         // Lesesal
-        String login_url = "http://10.22.24.171:8000/api/api-auth/";
+        //String login_url = "http://10.22.24.171:8000/api/api-auth/";
 
         // Hos Kristine
         //String login_url = "http://192.168.1.6:8000/api/api-auth/";
@@ -48,7 +48,7 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
         //String login_url = "https://chemie.no/api/api-auth/";
 
         //K26
-        //String login_url = "http://10.22.8.81:8000/api/api-auth/";
+        String login_url = "http://10.22.27.117:8000/api/api-auth/";
 
         // R21
         //String login_url = "http://10.22.11.147:8000/api/api-auth/";

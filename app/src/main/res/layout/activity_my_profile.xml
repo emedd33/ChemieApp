@@ -8,6 +8,13 @@
     android:theme="@android:style/Theme.NoTitleBar"
     tools:context="com.example.eskild.hc.myProfile">
 
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="95dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toTopOf="@+id/username_view" />
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -56,61 +63,33 @@
         android:id="@+id/acces_card_view"
         android:layout_width="95dp"
         android:layout_height="30dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Student-Kort: "
-        app:layout_constraintStart_toStartOf="@+id/profile_image"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image"
-        android:layout_marginLeft="8dp" />
+        app:layout_constraintStart_toStartOf="@+id/username_view"
+        app:layout_constraintTop_toBottomOf="@+id/username_view" />
 
     <TextView
-        android:id="@+id/Allergier_view"
-        android:layout_width="95dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:text="Allergier"
-        app:layout_constraintEnd_toEndOf="@+id/acces_card_view"
-        app:layout_constraintStart_toStartOf="@+id/acces_card_view"
-        app:layout_constraintTop_toBottomOf="@+id/acces_card_view" />
-
-    <TextView
-        android:id="@+id/telefon_view"
+        android:id="@+id/username_view"
         android:layout_width="95dp"
         android:layout_height="30dp"
         android:layout_marginTop="8dp"
         android:text="Telefon"
-        app:layout_constraintEnd_toEndOf="@+id/Allergier_view"
-        app:layout_constraintStart_toStartOf="@+id/Allergier_view"
-        app:layout_constraintTop_toBottomOf="@+id/Allergier_view" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_image"
+        tools:layout_editor_absoluteX="72dp" />
 
     <TextView
         android:id="@+id/acces_card_edit"
         android:layout_width="95dp"
         android:layout_height="30dp"
-        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="@+id/profile_image"
-        app:layout_constraintTop_toTopOf="@+id/acces_card_view"
-        android:layout_marginRight="8dp" />
-
-    <TextView
-        android:id="@+id/allergier_edit"
-        android:layout_width="95dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/acces_card_edit"
-        app:layout_constraintStart_toStartOf="@+id/acces_card_edit"
-        app:layout_constraintTop_toBottomOf="@+id/acces_card_edit" />
+        app:layout_constraintTop_toTopOf="@+id/acces_card_view" />
 
     <TextView
         android:id="@+id/telefon_edit"
         android:layout_width="95dp"
         android:layout_height="30dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/allergier_edit"
-        app:layout_constraintStart_toStartOf="@+id/allergier_edit"
-        app:layout_constraintTop_toBottomOf="@+id/allergier_edit"
-        android:layout_marginLeft="8dp" />
+        tools:layout_editor_absoluteX="213dp"
+        tools:layout_editor_absoluteY="311dp" />
 
     <Switch
         android:id="@+id/switch_kaffe"
@@ -118,7 +97,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="8dp"
         android:onClick="onClick"
-        android:switchTextAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:switchTextAppearance="@style/TextAppearance.AppCompat.Body1"
         android:text="Kaffe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -151,15 +130,19 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="181dp"
-        android:layout_height="22dp"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/rounded_edittext"
-        android:text="Instillinger for notification"
+        android:backgroundTint="@color/yellow_HC"
+        android:gravity="center_vertical"
+        android:text="Instillinger for notification."
         android:textAlignment="center"
         android:textColor="@android:color/background_dark"
-        app:layout_constraintStart_toStartOf="@+id/telefon_view"
-        app:layout_constraintTop_toBottomOf="@+id/telefon_view" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/acces_card_view" />
 
 
 </android.support.constraint.ConstraintLayout>
