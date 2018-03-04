@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.widget.ProgressBar;
 
+import com.example.eskild.hc.HovedActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,7 +18,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
+import com.example.eskild.hc.HovedActivity;
 /**
  * Created by Eskild on 21.01.2018.
  */
@@ -33,14 +35,7 @@ public class BackgroundWorker_sladder extends AsyncTask<HovedActivity.MyTaskPara
     protected String doInBackground(HovedActivity.MyTaskParams... params) {
         HovedActivity.MyTaskParams myTaskparams = params[0];
 
-             //Fjordgata 17 ipv4
-            String url_string = "http://192.168.20.2:8000/api/sladreboks/submission/";
-
-            // url til chemie.no
-            //String url_string = "https://chemie.no/api/sladreboks/submission/";
-
-            //String url_string = "http://10.22.8.81:8000/api/sladreboks/submission/";
-
+            String url_string = "https://chemie.no/api/sladreboks/submission/";
 
             String token = this.prefs.getString("token","");
 

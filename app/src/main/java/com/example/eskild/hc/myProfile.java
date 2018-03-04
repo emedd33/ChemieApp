@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,22 +19,22 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
 
 public class myProfile extends AppCompatActivity {
     Toolbar toolbar1;
-    String allegier;
     String access_card;
-    int phone_number;
     Button logout_button;
-    Bitmap profile_image;
-    private ImageView img;
+    private ImageView img_view;
     private SharedPreferences prefs;
-    public Switch switch_kaffe;
-    public Switch switch_event;
-    public Switch switch_felles;
+    public ToggleButton switch_kaffe;
+    public ToggleButton switch_event;
+    public ToggleButton switch_felles;
+    private String brukernavn;
+    private TextView brukernavn_edit;
+    private TextView access_card_edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,40 +47,23 @@ public class myProfile extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        this.switch_kaffe = (Switch)findViewById(R.id.switch_kaffe);
-        this.switch_felles = (Switch)findViewById(R.id.switch_felles);
-        this.switch_event = (Switch)findViewById(R.id.switch_event);
+        this.brukernavn_edit = (TextView)findViewById(R.id.username_edit);
+        this.img_view = (ImageView)findViewById(R.id.profile_image);
+        this.access_card_edit = (TextView)findViewById(R.id.acces_card_edit);
+
+        this.switch_event = (ToggleButton)findViewById(R.id.event_noti_btn);
+        this.switch_kaffe = (ToggleButton)findViewById(R.id.kaffe_noti_btn);
+        this.switch_felles = (ToggleButton)findViewById(R.id.felles_noti_btn);
+
         this.logout_button = (Button)findViewById(R.id.button_logout);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(myProfile.this);
         this.prefs = prefs;
 
-        this.switch_felles.setChecked(prefs.getBoolean("Felles",false));
-        this.switch_kaffe.setChecked(prefs.getBoolean("Kaffe",false));
-        this.switch_event.setChecked(prefs.getBoolean("Event",false));
 
-        if (savedInstanceState==null){
-            setInfo(prefs);
-        }
+        setInfo(prefs);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putParcelable("image",this.profile_image);
-        savedInstanceState.putString("access_card",this.access_card);
-        savedInstanceState.putString("allergies",this.allegier);
-        savedInstanceState.putInt("phone_number",this.phone_number);
-        savedInstanceState.putBoolean("saved",true);
-    }
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        this.phone_number = savedInstanceState.getInt("phone_number");
-        this.allegier = savedInstanceState.getString("allergies");
-        this.access_card = savedInstanceState.getString("access_card");
-        this.profile_image = savedInstanceState.getParcelable("image");
-    }
 
     public void onClick(View view){
          switch (view.getId()){
@@ -93,36 +75,32 @@ public class myProfile extends AppCompatActivity {
                  Intent intent = new Intent(this,LoginActivity.class);
                  startActivity(intent);
                  break;
-             case R.id.switch_kaffe:
-                 if (prefs.getBoolean("Kaffe",false)){
-                     prefs.edit().putBoolean("Kaffe",false).commit();
-                     switch_kaffe.setChecked(false);
-                     FirebaseMessaging.getInstance().unsubscribeFromTopic("Kaffe");
-                 } else {
-                     prefs.edit().putBoolean("Kaffe",true).commit();
-                     switch_kaffe.setChecked(true);
-                     FirebaseMessaging.getInstance().subscribeToTopic("Kaffe");
-                 }
-                 break;
-             case R.id.switch_event:
-                 if (prefs.getBoolean("Event",false)){
+
+             case R.id.event_noti_btn:
+                 if (this.prefs.getBoolean("Event",false)){
                      prefs.edit().putBoolean("Event",false).commit();
-                     switch_event.setChecked(false);
                      FirebaseMessaging.getInstance().unsubscribeFromTopic("Event");
                  } else {
                      prefs.edit().putBoolean("Event",true).commit();
-                     switch_event.setChecked(true);
                      FirebaseMessaging.getInstance().subscribeToTopic("Event");
                  }
                  break;
-             case R.id.switch_felles:
+             case R.id.kaffe_noti_btn:
+                 if (this.prefs.getBoolean("Kaffe",false)){
+                     prefs.edit().putBoolean("Kaffe",false).commit();
+                     FirebaseMessaging.getInstance().unsubscribeFromTopic("Kaffe");
+                 } else {
+                     prefs.edit().putBoolean("Kaffe",true).commit();
+                     FirebaseMessaging.getInstance().subscribeToTopic("Kaffe");
+                 }
+                 break;
+
+             case R.id.felles_noti_btn:
                  if (prefs.getBoolean("Felles",false)){
-                     prefs.edit().putBoolean("Felles",false).commit();
-                     switch_felles.setChecked(false);
+                     this.prefs.edit().putBoolean("Felles",false).commit();
                      FirebaseMessaging.getInstance().unsubscribeFromTopic("Felles");
                  } else {
                      prefs.edit().putBoolean("Felles",true).commit();
-                     switch_felles.setChecked(true);
                      FirebaseMessaging.getInstance().subscribeToTopic("Felles");
                  }
                  break;
@@ -158,22 +136,23 @@ public class myProfile extends AppCompatActivity {
 
     public void setInfo(SharedPreferences prefs) {
 
-
-        this.img = (ImageView)findViewById(R.id.profile_image);
         String image_string = prefs.getString("image","");
         if (!image_string.equals("")){
             Bitmap image = DecodedImage(image_string,prefs);
             Drawable d = new BitmapDrawable(getResources(), image);
-            this.img.setImageDrawable(d);
+            this.img_view.setImageDrawable(d);
         }
 
-        TextView access_card = (TextView)findViewById(R.id.acces_card_edit);
+        this.switch_event.setChecked(prefs.getBoolean("Event",false));
+        this.switch_kaffe.setChecked(prefs.getBoolean("Kaffe",false));
+        this.switch_felles.setChecked(prefs.getBoolean("Felles",false));
 
-        this.allegier = prefs.getString("allergies","");
         this.access_card = prefs.getString("access_card","");
-        this.phone_number = prefs.getInt("phone_number",22225555);
+        this.brukernavn = prefs.getString("brukernavn","");
 
-        access_card.setText(this.access_card);
+
+        access_card_edit.setText(this.access_card);
+        brukernavn_edit.setText(this.brukernavn);
 
 
     }

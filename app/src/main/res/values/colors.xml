@@ -7,7 +7,7 @@
     <color name="button_bottom">#8a8a5c</color>
     <color name="button_top">#adad85</color>
     <color name="background_gray">#b7b7b7</color>
-    <color name="Background">#444444</color>
+    <color name="Background">#2e2e2e</color>
 
     <!-- for å hindre et rendering problem legger jeg tl disse filene-->
     <item name="visible" type="id"/>

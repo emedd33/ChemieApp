@@ -40,23 +40,8 @@ public class BackgroundWorker_profile extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        // ipv4 for Fjordgata 17
-        String url_string = "http://10.22.27.117:8000/api/profile/profile/";
 
-        // Lesesalen
-        //String url_string = "http://10.22.24.171:8000/api/profile/profile/";
-
-        // url for nettsidene
-        // String url_string = "https://chemie.no/api/profile/profile/";
-
-        // Hos Kristine
-        //String url_string = "http://192.168.1.6:8000/api/profile/profile/";
-
-        // K26
-        //String url_string = "http://10.22.8.81:8000/api/profile/profile/";
-
-        // R21
-        //String url_string = "http://10.22.11.147:8000/api/profile/profile/";
+        String url_string = "https://chemie.no/api/profile/profile/";
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String token = prefs.getString("token","");
@@ -64,6 +49,7 @@ public class BackgroundWorker_profile extends AsyncTask<Void, Void, Void> {
 
             URL url = new URL(url_string);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setConnectTimeout(5000);
             con.setRequestMethod("GET");
             con.setRequestProperty("Authorization", token);
             con.setRequestProperty("Accept", "application/json");

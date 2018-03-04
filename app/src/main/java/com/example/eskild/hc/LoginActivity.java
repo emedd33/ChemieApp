@@ -1,23 +1,19 @@
 package com.example.eskild.hc;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.io.ByteArrayOutputStream;
 import java.util.concurrent.ExecutionException;
 
 
@@ -68,11 +64,13 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseMessaging.getInstance().subscribeToTopic("Kaffe");
                             FirebaseMessaging.getInstance().subscribeToTopic("Event");
                             FirebaseMessaging.getInstance().subscribeToTopic("Felles");
-                            prefs.edit().putBoolean("Kaffe",true);
-                            prefs.edit().putBoolean("Event",true);
-                            prefs.edit().putBoolean("Felles",true);
-                            prefs.edit().putBoolean("Access",true).commit();
-                            prefs.edit().commit();
+                            prefs.edit().putBoolean("Kaffe",true).commit();
+                            prefs.edit().putBoolean("Event",true).commit();
+                            prefs.edit().putBoolean("Felles",true).commit();
+
+
+                            prefs.edit().putString("brukernavn",username).commit();
+                            prefs.edit().putBoolean("logged_in",true).commit();
 
                             startActivity(intent);
                             finish();

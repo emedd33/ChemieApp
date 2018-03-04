@@ -1,14 +1,13 @@
 package com.example.eskild.hc;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -21,17 +20,11 @@ import java.net.URL;
 public class BackgroundWorker_kaffe extends AsyncTask<Void,Void,Integer> {
     public Context context;
     public int respons;
+    private ProgressDialog progressBar;
+
     @Override
     protected Integer doInBackground(Void... voids) {
-
-        // R22
-        String url_string = "http://10.22.27.117:8000/api/coffee/coffeesubmission/";
-
-        //Fjordgata
-        //String url_string = "http://192.168.20.2:8000/api/coffee/Coffeesubmission/";
-
-        // Kristine
-        //String url_string = "http://192.168.1.6:8000/api/coffee/Coffeesubmission/";
+        String url_string = "https://chemie.no/api/coffee/coffeesubmission/";
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String token = prefs.getString("token","");

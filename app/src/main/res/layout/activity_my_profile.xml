@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/Background"
     android:scrollbars="vertical"
     android:theme="@android:style/Theme.NoTitleBar"
     tools:context="com.example.eskild.hc.myProfile">
 
     <TextView
-        android:id="@+id/username"
+        android:id="@+id/username_edit"
         android:layout_width="95dp"
         android:layout_height="30dp"
+        android:gravity="center_vertical|center_horizontal"
         app:layout_constraintEnd_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="@+id/username_view" />
 
@@ -64,7 +66,10 @@
         android:layout_width="95dp"
         android:layout_height="30dp"
         android:layout_marginTop="8dp"
+        android:gravity="center_vertical|center_horizontal"
         android:text="Student-Kort: "
+        android:textColor="@color/yellow_HC"
+        android:typeface="sans"
         app:layout_constraintStart_toStartOf="@+id/username_view"
         app:layout_constraintTop_toBottomOf="@+id/username_view" />
 
@@ -73,67 +78,27 @@
         android:layout_width="95dp"
         android:layout_height="30dp"
         android:layout_marginTop="8dp"
-        android:text="Telefon"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image"
-        tools:layout_editor_absoluteX="72dp" />
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Brukernavn"
+        android:textColor="@color/yellow_HC"
+        android:typeface="sans"
+        app:layout_constraintStart_toStartOf="@+id/profile_image"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
     <TextView
         android:id="@+id/acces_card_edit"
         android:layout_width="95dp"
         android:layout_height="30dp"
+        android:gravity="center_vertical|center_horizontal"
         app:layout_constraintEnd_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="@+id/acces_card_view" />
 
     <TextView
-        android:id="@+id/telefon_edit"
-        android:layout_width="95dp"
-        android:layout_height="30dp"
-        tools:layout_editor_absoluteX="213dp"
-        tools:layout_editor_absoluteY="311dp" />
-
-    <Switch
-        android:id="@+id/switch_kaffe"
-        android:layout_width="226dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onClick"
-        android:switchTextAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:text="Kaffe"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <Switch
-        android:id="@+id/switch_event"
-        android:layout_width="226dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onClick"
-        android:switchTextAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:text="Eventer"
-        app:layout_constraintEnd_toEndOf="@+id/switch_kaffe"
-        app:layout_constraintStart_toStartOf="@+id/switch_kaffe"
-        app:layout_constraintTop_toBottomOf="@+id/switch_kaffe" />
-
-    <Switch
-        android:id="@+id/switch_felles"
-        android:layout_width="226dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onClick"
-        android:switchTextAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:text="Fellesbekjed"
-        app:layout_constraintEnd_toEndOf="@+id/switch_event"
-        app:layout_constraintStart_toStartOf="@+id/switch_event"
-        app:layout_constraintTop_toBottomOf="@+id/switch_event"
-        tools:checked="false" />
-
-    <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
-        android:layout_height="44dp"
+        android:layout_height="22dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/rounded_edittext"
+        android:background="@color/yellow_HC"
         android:backgroundTint="@color/yellow_HC"
         android:gravity="center_vertical"
         android:text="Instillinger for notification."
@@ -143,6 +108,69 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/acces_card_view" />
+
+    <ToggleButton
+        android:id="@+id/event_noti_btn"
+        android:layout_width="100dp"
+        android:layout_height="43dp"
+        android:onClick="onClick"
+        android:text="ToggleButton"
+        app:layout_constraintStart_toStartOf="@+id/acces_card_edit"
+        app:layout_constraintTop_toTopOf="@+id/Event_view" />
+
+    <ToggleButton
+        android:id="@+id/kaffe_noti_btn"
+        android:layout_width="100dp"
+        android:layout_height="43dp"
+        android:onClick="onClick"
+        android:text="ToggleButton"
+        app:layout_constraintEnd_toEndOf="@+id/event_noti_btn"
+        app:layout_constraintStart_toStartOf="@+id/event_noti_btn"
+        app:layout_constraintTop_toBottomOf="@+id/event_noti_btn" />
+
+    <ToggleButton
+        android:id="@+id/felles_noti_btn"
+        android:layout_width="100dp"
+        android:layout_height="43dp"
+        android:checked="false"
+        android:onClick="onClick"
+        android:text="ToggleButton"
+        app:layout_constraintEnd_toEndOf="@+id/kaffe_noti_btn"
+        app:layout_constraintStart_toStartOf="@+id/kaffe_noti_btn"
+        app:layout_constraintTop_toBottomOf="@+id/kaffe_noti_btn" />
+
+    <TextView
+        android:id="@+id/Event_view"
+        android:layout_width="103dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Event"
+        android:textColor="@color/yellow_HC"
+        android:typeface="sans"
+        app:layout_constraintStart_toStartOf="@+id/acces_card_view"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/Kaffe_view"
+        android:layout_width="103dp"
+        android:layout_height="43dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Kaffe"
+        android:textColor="@color/yellow_HC"
+        android:typeface="sans"
+        app:layout_constraintStart_toStartOf="@+id/Event_view"
+        app:layout_constraintTop_toTopOf="@+id/kaffe_noti_btn" />
+
+    <TextView
+        android:id="@+id/felles_view"
+        android:layout_width="103dp"
+        android:layout_height="43dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Fellebeskjed"
+        android:textColor="@color/yellow_HC"
+        app:layout_constraintStart_toStartOf="@+id/Kaffe_view"
+        app:layout_constraintTop_toTopOf="@+id/felles_noti_btn" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -18,6 +19,7 @@ import static android.content.ContentValues.TAG;
  */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    public Notification kaffe_noti;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
@@ -32,12 +34,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String content = remoteMessage.getNotification().getBody();
             Intent intent = new Intent();
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-            Notification kaffe_noti = new Notification.Builder(this)
-                    .setContentTitle("Chemie")
-                    .setContentText(content)
-                    .setSmallIcon(R.drawable.notification_main)
-                    .setContentIntent(pendingIntent).getNotification();
-            kaffe_noti.flags = Notification.FLAG_AUTO_CANCEL;
+
+            if (remoteMessage.getFrom().equals("/topics/Kaffe")){
+                this.kaffe_noti = new Notification.Builder(this)
+                        .setContentTitle("Chemie")
+                        .setContentText(content)
+                        .setSmallIcon(R.drawable.notification_coffee)
+                        .setContentIntent(pendingIntent)
+                        .getNotification();
+                kaffe_noti.defaults |= Notification.DEFAULT_VIBRATE;
+                kaffe_noti.defaults |= Notification.DEFAULT_SOUND;
+                kaffe_noti.flags = Notification.FLAG_AUTO_CANCEL;
+            } else {
+                this.kaffe_noti = new Notification.Builder(this)
+                        .setContentTitle("Chemie")
+                        .setContentText(content)
+                        .setSmallIcon(R.drawable.notification_main)
+                        .setContentIntent(pendingIntent).getNotification();
+                kaffe_noti.defaults |= Notification.DEFAULT_VIBRATE;
+                kaffe_noti.defaults |= Notification.DEFAULT_SOUND;
+                kaffe_noti.flags = Notification.FLAG_AUTO_CANCEL;
+            }
             NotificationManager nm = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
             nm.notify(0,kaffe_noti);
         }

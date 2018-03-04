@@ -15,8 +15,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.contex = this;
         this.prefs  = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (prefs.getBoolean("Access",false)){
+        if (prefs.getBoolean("logged_in",false)){
             Intent intent = new Intent(this, HovedActivity.class);
             startActivity(intent);
             finish();

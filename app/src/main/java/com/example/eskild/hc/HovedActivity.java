@@ -1,12 +1,16 @@
 package com.example.eskild.hc;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Icon;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
@@ -14,12 +18,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -41,16 +43,13 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
     private SharedPreferences prefs;
     private TextView filename;
     private ImageButton delete_btn;
-    private ImageButton addPhoto_btn;
-    private ImageButton kaffe_btn;
-    private Button send_btn;
     private ConstraintLayout file_layout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hoved);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,9 +60,6 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
         this.filename = (TextView)findViewById(R.id.filename_view);
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         this.delete_btn = (ImageButton)findViewById(R.id.delete_btn);
-        this.addPhoto_btn = (ImageButton)findViewById(R.id.addPhoto_btn);
-        this.kaffe_btn = (ImageButton)findViewById(R.id.kaffe_btn);
-        this.send_btn = (Button)findViewById(R.id.send_btn);
         this.file_layout = (ConstraintLayout)findViewById(R.id.file_layout);
 
 
@@ -80,7 +76,6 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
         int id = item.getItemId();
         switch (id) {
             case R.id.Settings:
-                Toast.makeText(HovedActivity.this, "Profile", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, myProfile.class);
                 startActivity(intent);
                 return true;
@@ -120,23 +115,69 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
                 if (sladder_string.equals("") && (this.bitmap == null)){
                     break;
                 }
-                sendSladder();
+                if (!isNetworkAvailable()){
+                    Toast.makeText(HovedActivity.this,"Internett ikke tilgjengelig",Toast.LENGTH_SHORT).show();
+                }
+                AlertDialog.Builder sladder_builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    sladder_builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    sladder_builder = new AlertDialog.Builder(this);
+                }
+                sladder_builder.setTitle("Sende sladder")
+                        .setMessage("Har du sladder du vil dele med Sugepumpa?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                sendSladder();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setIcon(R.mipmap.ic_launcher)
+                        .show();
                 break;
             case R.id.kaffe_btn:
-                BackgroundWorker_kaffe worker = new BackgroundWorker_kaffe(HovedActivity.this);
-                worker.execute();
-                try {
-                    int respons = worker.get();
-                    if (respons == 201){
-                        Toast.makeText(HovedActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(HovedActivity.this, "Respons Error: " + String.valueOf(respons), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+                if (!isNetworkAvailable()){
+                    Toast.makeText(HovedActivity.this,"Internett ikke tilgjengelig",Toast.LENGTH_SHORT).show();
                 }
+                AlertDialog.Builder kaffe_builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    kaffe_builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    kaffe_builder = new AlertDialog.Builder(this);
+                }
+                kaffe_builder.setTitle("Kaffe på kontoret")
+                        .setMessage("Har du laget kaffe og vil dele med folk på kontoret?")
+                        .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                BackgroundWorker_kaffe worker = new BackgroundWorker_kaffe(HovedActivity.this);
+                                worker.execute();
+                                try {
+                                    int respons = worker.get();
+                                    if (respons == 201){
+                                        Toast.makeText(HovedActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(HovedActivity.this, "Respons Error: " + String.valueOf(respons), Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                } catch (ExecutionException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+                        .setNegativeButton("Nei", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setIcon(R.drawable.notification_coffee)
+                        .show();
                 break;
         }
     }
@@ -213,6 +254,13 @@ public class HovedActivity extends AppCompatActivity implements  View.OnClickLis
             }
         }
     }
-
-
+    public boolean isNetworkAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

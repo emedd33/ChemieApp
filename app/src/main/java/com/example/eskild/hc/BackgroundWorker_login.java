@@ -35,23 +35,8 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
     @Override
     protected Integer doInBackground(String... params) {
 
-        //Fjordgata 17 ipv4
-        //String login_url = "http://192.168.20.2:8000/api/api-auth/";
+        String login_url = "https://chemie.no/api/api-auth/";
 
-        // Lesesal
-        //String login_url = "http://10.22.24.171:8000/api/api-auth/";
-
-        // Hos Kristine
-        //String login_url = "http://192.168.1.6:8000/api/api-auth/";
-
-        // Chemie.no url
-        //String login_url = "https://chemie.no/api/api-auth/";
-
-        //K26
-        String login_url = "http://10.22.27.117:8000/api/api-auth/";
-
-        // R21
-        //String login_url = "http://10.22.11.147:8000/api/api-auth/";
         int respons = 500;
         String user_name = params[0];
         String password = params[1];
@@ -64,6 +49,7 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
 
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setConnectTimeout(5000);
             con.setRequestMethod("POST");
             con.setRequestProperty("Accept", "application/json");
             con.setRequestProperty("Content-Type", "application/json");
