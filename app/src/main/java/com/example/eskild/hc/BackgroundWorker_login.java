@@ -36,7 +36,6 @@ public class BackgroundWorker_login extends AsyncTask<String, Void, Integer> {
     protected Integer doInBackground(String... params) {
 
         String login_url = "https://chemie.no/api/api-auth/";
-
         int respons = 500;
         String user_name = params[0];
         String password = params[1];

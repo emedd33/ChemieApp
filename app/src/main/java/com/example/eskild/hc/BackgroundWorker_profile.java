@@ -41,7 +41,7 @@ public class BackgroundWorker_profile extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        String url_string = "https://chemie.no/api/profile/profile/";
+        String url_string = "https//chemie.no/api/profile/profile/";
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String token = prefs.getString("token","");
